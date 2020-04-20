@@ -25,8 +25,8 @@ Exponentiation operator, returns `x` raised to the power `y`.
    result = vifelse((y == 0) | (x == 1), V(1.0), result)
 
     return result
-
 end
+
 @inline function pow_fast(x::V, y::V) where {V <: FloatType}
     T = eltype(x)
     yi = unsafe_trunc(fpinttype(T), y)
@@ -50,11 +50,6 @@ end
     return result
 
 end
-
-
-
-
-
 
 @inline function cbrt_kernel(x::FloatType64)
     c6d = -0.640245898480692909870982
@@ -133,14 +128,12 @@ function cbrt(d::V) where {V <: FloatType}
     return z
 end
 
-
-
 """
     hypot(x,y)
 
 Compute the hypotenuse `\\sqrt{x^2+y^2}` avoiding overflow and underflow.
 """
-function hypot(x::T, y::T) where {T<:vIEEEFloat}
+@inline function hypot(x::T, y::T) where {T<:vIEEEFloat}
     a = abs(x)
     b = abs(y)
 
@@ -148,5 +141,5 @@ function hypot(x::T, y::T) where {T<:vIEEEFloat}
     y = max(a,b)
 
     r = vifelse(x == 0, y, y / x)
-    x * sqrt(T(1.0) + r * r)
+    x * _sqrt(T(1.0) + r * r)
 end

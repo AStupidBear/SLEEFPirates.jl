@@ -8,7 +8,7 @@ over_sch(::Type{Float32}) = 89f0
 
 Compute hyperbolic sine of `x`.
 """
-function sinh(x::V) where {V <: FloatType}
+@inline function sinh(x::V) where {V <: FloatType}
     T = eltype(x)
     u = abs(x)
     d = expk2(Double(u))
@@ -21,14 +21,12 @@ function sinh(x::V) where {V <: FloatType}
     return u
 end
 
-
-
 """
     cosh(x)
 
 Compute hyperbolic cosine of `x`.
 """
-function cosh(x::V) where {V <: FloatType}
+@inline function cosh(x::V) where {V <: FloatType}
     T = eltype(x)
     u = abs(x)
     d = expk2(Double(u))
@@ -40,8 +38,6 @@ function cosh(x::V) where {V <: FloatType}
     return u
 end
 
-
-
 over_th(::Type{Float64}) = 18.714973875
 over_th(::Type{Float32}) = 18.714973875f0
 
@@ -50,7 +46,7 @@ over_th(::Type{Float32}) = 18.714973875f0
 
 Compute hyperbolic tangent of `x`.
 """
-function tanh(x::V) where {V <: FloatType}
+@inline function tanh(x::V) where {V <: FloatType}
     T = eltype(x)
     u = abs(x)
     d = expk2(Double(u))
@@ -60,18 +56,16 @@ function tanh(x::V) where {V <: FloatType}
     u = vifelse(abs(x) > over_th(T), T(1.0), u)
     u = vifelse(isnan(u), T(1), u)
     u = flipsign(u, x)
-    # u = vifelse(isnan(x), T(NaN), u)
+    u = vifelse(isnan(x), T(NaN), u)
     return u
 end
-
-
 
 """
     asinh(x)
 
 Compute the inverse hyperbolic sine of `x`.
 """
-function asinh(x::V) where {V <: FloatType}
+@inline function asinh(x::V) where {V <: FloatType}
     T = eltype(x)
     y = abs(x)
 
@@ -90,14 +84,12 @@ function asinh(x::V) where {V <: FloatType}
     return y
 end
 
-
-
 """
     acosh(x)
 
 Compute the inverse hyperbolic cosine of `x`.
 """
-function acosh(x::V) where {V <: FloatType}
+@inline function acosh(x::V) where {V <: FloatType}
     T = eltype(x)
     d = logk2(dadd2(dmul(dsqrt(dadd2(x, T(1.0))), dsqrt(dsub2(x, T(1.0)))), x))
     y = V(d)
@@ -110,14 +102,12 @@ function acosh(x::V) where {V <: FloatType}
     return y
 end
 
-
-
 """
     atanh(x)
 
 Compute the inverse hyperbolic tangent of `x`.
 """
-function atanh(x::V) where {V <: FloatType}
+@inline function atanh(x::V) where {V <: FloatType}
     T = eltype(x)
     u = abs(x)
     d = logk2(ddiv(dadd2(T(1.0), u), dsub2(T(1.0), u)))
